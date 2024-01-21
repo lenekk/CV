@@ -3,8 +3,16 @@ import { Keys, GamePad } from "./GamePad";
 import { Collider } from "./Collider";
 import { AboutMe } from "./AboutMe";
 
-export const Main = (app : Application) => {
+type colliderPosition = {
+    position : {
+        x : number,
+        y : number,
+    },
+    width : number,
+    height : number
+}
 
+export const Main = (app : Application) => {
 
     const mainContainer = new Container();
     app.stage.addChild(mainContainer);
@@ -15,24 +23,38 @@ export const Main = (app : Application) => {
     player.position.set(playerOffsetX, playerOffsetY);
     player.scale.set(3,3);
     player.animationSpeed = .2;
-    //player.play();
     const background = Sprite.from(Assets.get('mapa'))
+    background.position.set(400,100)
 
     const colliderArray = Assets.get("mapData").layers[4]
     const colliderMap = []
+    const interactionMap = []
     const collisions : Array<Collider> = []
+    const interactionArray = Assets.get("mapData").layers[5]
+    const interactions : Array<Collider> = []
+
+    for(let i=0; i<interactionArray.data.length; i+=interactionArray.width){
+        interactionMap.push(interactionArray.data.slice(i, i+interactionArray.width))
+    }
     
     for(let i=0; i<colliderArray.data.length; i += colliderArray.width){
         colliderMap.push(colliderArray.data.slice(i, i+colliderArray.width))
     }
 
+    interactionMap.forEach((row, index) => {
+        row.forEach((value : number, indexX : number) => {
+            if(value == 254){
+                interactions.push(new Collider({x: indexX * 48 + 400, y: index * 48 + 100}, 48, 48))
+            }
+        })
+    })
 
     if(utils.isMobile.phone){        
 
         colliderMap.forEach((row, index) => {
             row.forEach((value : number, indexX : number) => {
                 if(value === 876){
-                    collisions.push(new Collider({x: indexX * 48/1.3365 - 198, y: index * 48/1.3365}, 48/1.3365, 48/1.3365));
+                    collisions.push(new Collider({x: indexX * 48/1.3365 - 98, y: index * 48/1.3365}, 48/1.3365, 48/1.3365));
                 }
             })
         });    
@@ -40,7 +62,7 @@ export const Main = (app : Application) => {
         colliderMap.forEach((row, index) => {
             row.forEach((value : number, indexX : number) => {
                 if(value === 876){
-                    collisions.push(new Collider({x: indexX * 48, y: index * 48}, 48, 48));
+                    collisions.push(new Collider({x: indexX * 48 + 400, y: index * 48 + 100}, 48, 48));
                 }
             })
         });
@@ -52,9 +74,37 @@ export const Main = (app : Application) => {
         colCon.addChild(collider.add());
     })
 
+    interactions.forEach(interact => {
+        app.stage.addChild(interact.add())
+    })
+
     mainContainer.addChild(background);
     mainContainer.addChild(player);
-    AboutMe(app);
+
+    const checkCollision = (col1: Sprite, col2 : colliderPosition) => {
+        
+        return(
+            col1.position.x + col1.width >= col2.position.x &&
+            col1.position.x <= col2.position.x + col2.width && 
+            col1.position.y <= col2.position.y + col2.height - 20 && 
+            col1.position.y + col1.height >= col2.position.y
+        )
+    
+    }
+
+
+    const aboutMeInteraction = (player : Sprite, interactionCollider : Collider) => {
+        if(checkCollision(player, interactionCollider)){
+            AboutMe(app)
+        }else{
+            const childToRemove = app.stage.getChildByName("aboutMe")
+            if(childToRemove){
+                app.stage.removeChild(childToRemove)
+            }  
+        }
+    }
+
+    //AboutMe(app);
 
     const keyHandlerUp = (event : KeyboardEvent) => {
 
@@ -116,14 +166,13 @@ export const Main = (app : Application) => {
 
     }
 
-
     if(utils.isMobile.phone){
 
         window.removeEventListener('keydown', keyHandlerDown)
         window.removeEventListener('keyup', keyHandlerUp)
         
         background.scale.set(.75,.75)
-        background.position.set(-200,0)
+        background.position.set(-100,0)
 
         const gamePad = new GamePad(app);
         gamePad.add(keys)
@@ -131,77 +180,153 @@ export const Main = (app : Application) => {
     }
 
     let previousKey = ''
+    let collisionEnter : boolean = false;
 
     Ticker.shared.add(() => {
 
+        collisionEnter = false
+        console.log(interactions);
+
+        aboutMeInteraction(player, interactions[0])
+
         if(keys.w.isClicked){
 
-            if(player.playing == false){
-                player.play();
-            }
-            
-            if(player.textures != Assets.get('mainCharacter').animations['up']){
-                player.textures = Assets.get('mainCharacter').animations['up']
-                player.play();
+            for(let i=0; i<collisions.length; i++){
+                
+                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x, y: collisions[i].position.y+2}}))
+                {
+                    collisionEnter = true;
+                    break;
+                }
+                
             }
 
-            background.position.y += 1
-            collisions.forEach(collider => {
-                collider.move("y+")
-            })
+            if(collisionEnter == false){
+                if(player.playing == false){
+                    player.play();
+                }
+                
+                if(player.textures != Assets.get('mainCharacter').animations['up']){
+                    player.textures = Assets.get('mainCharacter').animations['up']
+                    player.play();
+                }
+    
+                background.position.y += 1
+                collisions.forEach(collider => {
+                    collider.move("y+")
+                })
+
+                interactions.forEach(interact => {
+                    interact.move("y+")
+                })
+            }
+
+            
             
         }
 
         else if(keys.s.isClicked){
 
-            if(player.playing == false){
-                player.play();
-            }
-
-            if(player.textures != Assets.get('mainCharacter').animations['down']){
-                player.textures = Assets.get('mainCharacter').animations['down']
-                player.play();
+            for(let i=0; i<collisions.length; i++){
+                
+                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x, y: collisions[i].position.y-2}}))
+                {
+                    collisionEnter = true;
+                    break;
+                }
+                
             }
             
-            background.position.y -= 1
-            collisions.forEach(collider => {
-                collider.move("y-")
-            })
+            if(collisionEnter == false){
+                if(player.playing == false){
+                    player.play();
+                }
+    
+                if(player.textures != Assets.get('mainCharacter').animations['down']){
+                    player.textures = Assets.get('mainCharacter').animations['down']
+                    player.play();
+                }
+                
+                background.position.y -= 1
+                collisions.forEach(collider => {
+                    collider.move("y-")
+                })
+                interactions.forEach(interact => {
+                    interact.move("y-")
+                })
+            }
+            
         }
 
         else if(keys.a.isClicked){
 
-            if(player.playing == false){
-                player.play();
+            for(let i=0; i<collisions.length; i++){
+                
+                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x+2, y: collisions[i].position.y}}))
+                {
+                    collisionEnter = true;
+                    
+                    break;
+                }
+                
             }
 
-            if(player.textures != Assets.get('mainCharacter').animations['left']){
-                player.textures = Assets.get('mainCharacter').animations['left']
-                player.play();
+            if(collisionEnter == false){
+                if(player.playing == false){
+                    player.play();
+                }
+    
+                if(player.textures != Assets.get('mainCharacter').animations['left']){
+                    player.textures = Assets.get('mainCharacter').animations['left']
+                    player.play();
+                }
+    
+                background.position.x += 1
+                collisions.forEach(collider => {
+                    collider.move("x+")
+                })
+                interactions.forEach(interact => {
+                    interact.move("x+")
+                })
             }
 
-            background.position.x += 1
-            collisions.forEach(collider => {
-                collider.move("x+")
-            })
+            
             
         }
 
         else if(keys.d.isClicked){
 
-            if(player.playing == false){
-                player.play();
-            }
-            
-            if(player.textures != Assets.get('mainCharacter').animations['right']){
-                player.textures = Assets.get('mainCharacter').animations['right']
-                player.play();
+            for(let i=0; i<collisions.length; i++){
+                
+                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x -2, y: collisions[i].position.y}}))
+                {
+                    collisionEnter = true;
+                    
+                    break;
+                }
+                
             }
 
-            background.position.x -= 1
-            collisions.forEach(collider => {
-                collider.move("x-")
-            })
+            if(collisionEnter == false){
+                if(player.playing == false){
+                    player.play();
+                }
+                
+                if(player.textures != Assets.get('mainCharacter').animations['right']){
+                    player.textures = Assets.get('mainCharacter').animations['right']
+                    player.play();
+                }
+    
+                background.position.x -= 1
+                collisions.forEach(collider => {
+                    collider.move("x-")
+                })
+                interactions.forEach(interact => {
+                    interact.move("x-")
+                })
+            }
+
+            
             
         }else{
             player.stop();

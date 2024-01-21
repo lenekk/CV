@@ -1,67 +1,48 @@
-import { Application, Container, Sprite, Text, TextStyle, isMobile } from "pixi.js";
+import { Application, Container, Sprite, isMobile, Text, TextStyle} from "pixi.js";
+import { writeMessage } from "./globalFunctions";
 
 export const AboutMe = (app : Application) => {
 
-    let sizeX;
-    let sizeY;
-
-    if(isMobile.any == true){
-        sizeX = app.screen.width;
-        sizeY = app.screen.height/2
-    }else{
-        sizeX = app.screen.width/2
-        sizeY = app.screen.height
-    }
-
-    const titleStyle : TextStyle = new TextStyle({fontFamily: "font", fontWeight: "bold", fontSize: "40px"})
-    const messageStyle : TextStyle = new TextStyle({fontFamily: "font", fontWeight: "bold", fontSize: "20px"})
-
-    const pageContainer : Container = new Container();
-    pageContainer.position.set(app.screen.width/2, app.screen.height/2)
-    app.stage.addChild(pageContainer);
-    const paper = Sprite.from('paper')
-    paper.anchor.set(.5, .5)
-    paper.width = sizeX
-    paper.height = sizeY
-    const textTitle = new Text("")
-    textTitle.style = titleStyle
-    textTitle.position.set(0, -350)
-    textTitle.anchor.set(0.5,0.5)
-    const aboutMeText = new Text("");
-    aboutMeText.style = messageStyle;
-    aboutMeText.anchor.set(.5,.5)
-    pageContainer.addChild(paper)
-    const phone = Sprite.from('phoneIcon')
-    phone.scale.set(.2,.2)
-    phone.position.set(-paper.width/4, paper.height/3)
-    const mail = Sprite.from('mailIcon')
-    mail.scale.set(.2,.2)
-    mail.position.set(-paper.width/4, paper.height/3 - phone.height-10)
-    pageContainer.addChild(phone)
-    pageContainer.addChild(mail)
-    paper.addChild(textTitle)
-    paper.addChild(aboutMeText);
-
-    writeMessage("About Me", textTitle);
-    writeMessage("Mam na imię Dominik. Jestem świeżo\nupieczonym absolwentem informatyki\nwydziału Matematyki i Informatyki\nUniwersytetu Łódzkiego.\n\nAkutalnie poszukuję swojego pie-\nrwszego komercyjnego doświadczenia\nw branży IT. Swoją karierę pla-\nuję związać z szeroko pojętym web\ndevelopmentem, choć jestem otwarty\nna naukę innych gałęzi branży IT.", aboutMeText);
-  
-}
-
-const writeMessage = (msg : string, textInstance : Text) => {
+    if(!app.stage.getChildByName("aboutMe")){
+        const titleStyle : TextStyle = new TextStyle({fontFamily: "font", fontWeight: "bold", fontSize: "40px"})
+        const messageStyle : TextStyle = new TextStyle({fontFamily: "font", fontWeight: "bold", fontSize: "20px"})
     
-    let currentMessage = ""
-    let i = 0;
-
-    const writing =(i : number) => {
-        currentMessage = msg.substring(0, i) 
-        textInstance.text = currentMessage 
-    }
-    const interval = setInterval(() => {
-        i++
-        writing(i)
-    }, 100)
+        let scaleValueX : number = .75;
+        let scaleValueY : number = .75;
     
-    if(i == msg.length){
-        clearInterval(interval);
+        let offsetX : number = 0;
+        let offsetY : number = 0;
+    
+        if(isMobile.phone){
+            scaleValueX = .28
+            scaleValueY = .4
+            offsetY = - app.screen.height/8
+    
+        }
+    
+        const pageContainer : Container = new Container();
+        pageContainer.name = "aboutMe"
+        pageContainer.position.set(app.screen.width/2, app.screen.height/2)
+    
+        const paper : Sprite = Sprite.from('paper')
+        paper.position.set(offsetX, offsetY)
+        paper.scale.set(scaleValueX,scaleValueY)
+        paper.anchor.set(.5,.5)
+    
+        const textTitle : Text = new Text("")
+        textTitle.style = titleStyle
+        textTitle.anchor.set(.5, 10)
+        writeMessage("About me", textTitle);
+    
+        const aboutText : Text = new Text("")
+        aboutText.style = messageStyle
+        aboutText.anchor.set(.5, .5)
+        writeMessage(`Mam na imię Dominik. Jestem świeżo\nupieczonym absolwentem informatyki\nwydziału Matematyki i Informatyki\nUniwersytetu Łódzkiego.\n\nAkutalnie poszukuję swojego pie-\nrwszego komercyjnego doświadczenia\nw branży IT. Swoją karierę pla-\nuję związać z szeroko pojętym web\ndevelopmentem, choć jestem otwarty\nna naukę innych gałęzi branży IT.\n\nEdukacja:\n\n- ZSZ w Ozorkowie:\n  kierunek informatyka\n\n- Uniwersytet Łódzki\n  Wydział Matematyki i Informatyki\n\n  1) Lic. informatyka spec.grafika\n  komputerowa i projektowanie gier\n\n  2) Mgr. informatyka spec.inter-\n  aktywne media`, aboutText);
+    
+        app.stage.addChild(pageContainer);
+        pageContainer.addChild(paper)
+        paper.addChild(textTitle)
+        paper.addChild(aboutText)
     }
+
 }

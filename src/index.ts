@@ -2,8 +2,8 @@ import { Application, isMobile} from 'pixi.js'
 import { LoadingScreen } from './LoadingScreen';
 
 if(isMobile.any === false){
-	window.innerHeight = window.innerHeight*.75
-	window.innerWidth = window.innerWidth*.75
+	window.innerHeight = window.innerHeight
+	window.innerWidth = window.innerHeight
 }
 
 const app = new Application({
