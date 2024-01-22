@@ -11,6 +11,8 @@ export const manifest:ResolverManifest = {
                 "paper" : "papirus.png",
                 "phoneIcon" : "telefon.png",
                 "mailIcon" : "mail.png",
+                "contact" : "contactBackground.png",
+                "copy" : "copy.png"
             }
         }
     ]

@@ -2,6 +2,7 @@ import { AnimatedSprite, Application, Container, Sprite, utils, Assets, Ticker} 
 import { Keys, GamePad } from "./GamePad";
 import { Collider } from "./Collider";
 import { AboutMe } from "./AboutMe";
+import { ContactMe } from "./ContactMe";
 
 type colliderPosition = {
     position : {
@@ -104,7 +105,7 @@ export const Main = (app : Application) => {
         }
     }
 
-    //AboutMe(app);
+    ContactMe(app);
 
     const keyHandlerUp = (event : KeyboardEvent) => {
 
