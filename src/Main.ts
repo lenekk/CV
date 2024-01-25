@@ -3,6 +3,7 @@ import { Keys, GamePad } from "./GamePad";
 import { Collider } from "./Collider";
 import { AboutMe } from "./AboutMe";
 import { ContactMe } from "./ContactMe";
+import { Skills } from "./Skills";
 
 type colliderPosition = {
     position : {
@@ -42,13 +43,24 @@ export const Main = (app : Application) => {
         colliderMap.push(colliderArray.data.slice(i, i+colliderArray.width))
     }
 
-    interactionMap.forEach((row, index) => {
-        row.forEach((value : number, indexX : number) => {
-            if(value == 254){
-                interactions.push(new Collider({x: indexX * 48 + 400, y: index * 48 + 100}, 48, 48))
-            }
+    if(utils.isMobile.phone){
+        interactionMap.forEach((row, index) => {
+            row.forEach((value : number, indexX : number) => {
+                if(value == 254){
+                    interactions.push(new Collider({x: indexX * 48/1.3365 - 98, y: index * 48/1.3365}, 96/1.3365, 96/1.3365))
+                }
+            })
         })
-    })
+    }else{
+        interactionMap.forEach((row, index) => {
+            row.forEach((value : number, indexX : number) => {
+                if(value == 254){
+                    interactions.push(new Collider({x: indexX * 48 + 400, y: index * 48 + 100}, 96, 96))
+                }
+            })
+        })
+    }
+
 
     if(utils.isMobile.phone){        
 
@@ -105,8 +117,28 @@ export const Main = (app : Application) => {
         }
     }
 
-    ContactMe(app);
+    const contactInteraction = (player : Sprite, interactionCollider : Collider) => {
+        if(checkCollision(player, interactionCollider)){
+            ContactMe(app)
+        }else{
+            const childToRemove = app.stage.getChildByName("contact")
+            if(childToRemove){
+                app.stage.removeChild(childToRemove)
+            }  
+        }
+    }
 
+    const skillsInteraction = (player : Sprite, interactionCollider : Collider) => {
+        if(checkCollision(player, interactionCollider)){
+            Skills(app)
+        }else{
+            const childToRemove = app.stage.getChildByName("skills")
+            if(childToRemove){
+                app.stage.removeChild(childToRemove)
+            }  
+        }
+    }
+    
     const keyHandlerUp = (event : KeyboardEvent) => {
 
         switch (event.key){
@@ -183,12 +215,15 @@ export const Main = (app : Application) => {
     let previousKey = ''
     let collisionEnter : boolean = false;
 
+    console.log(interactions);
+
     Ticker.shared.add(() => {
 
         collisionEnter = false
-        console.log(interactions);
 
         aboutMeInteraction(player, interactions[0])
+        contactInteraction(player, interactions[1])
+        skillsInteraction(player, interactions[2])
 
         if(keys.w.isClicked){
 

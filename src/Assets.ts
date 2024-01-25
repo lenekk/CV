@@ -12,7 +12,16 @@ export const manifest:ResolverManifest = {
                 "phoneIcon" : "telefon.png",
                 "mailIcon" : "mail.png",
                 "contact" : "contactBackground.png",
-                "copy" : "copy.png"
+                "copy" : "copy.png",
+                "react" : "react.png",
+                "javascript" : "javascript.png",
+                "typescript": "typescript.png",
+                "cpp" : "cpp.png",
+                "html": "html.png",
+                "css" : "css.png",
+                "git" : "git.png",
+                "pixi" : "pixijs.png"
+
             }
         }
     ]
