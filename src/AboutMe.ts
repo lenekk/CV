@@ -7,8 +7,8 @@ export const AboutMe = (app : Application) => {
         const titleStyle : TextStyle = new TextStyle({fontFamily: "font", fontWeight: "bold", fontSize: "40px"})
         const messageStyle : TextStyle = new TextStyle({fontFamily: "font", fontWeight: "bold", fontSize: "20px"})
     
-        let scaleValueX : number = .75;
-        let scaleValueY : number = .75;
+        let scaleValueX : number = .5;
+        let scaleValueY : number = .5;
     
         let offsetX : number = 0;
         let offsetY : number = 0;

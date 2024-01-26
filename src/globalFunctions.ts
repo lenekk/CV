@@ -1,5 +1,5 @@
-import { Assets, Text } from "pixi.js";
-import { Sound } from "@pixi/sound"
+import { Text } from "pixi.js";
+import { sound } from "@pixi/sound"
 
 
 
@@ -8,17 +8,14 @@ export const writeMessage = (msg : string, textInstance : Text) => {
     let currentMessage = ""
     let i = 0;
 
-    const click = Sound.from(Assets.get("keySound"))
-    click.singleInstance = true;
-    click.speed = .2
-
     const writing =(i : number) => {
         if(!textInstance.dirty){
             currentMessage = msg.substring(0, i)
-            click.play()
+            //console.log(currentMessage);
+            sound.play("keySound", {singleInstance : true})
             textInstance.text = currentMessage 
         }else{
-            click.stop()
+            sound.stop("keySound")
             clearInterval(interval)
         }
 
@@ -26,16 +23,17 @@ export const writeMessage = (msg : string, textInstance : Text) => {
     const interval = setInterval(() => {
         i++
         writing(i)
-        console.log(textInstance.dirty);
+        //console.log(textInstance.dirty);
         if(i == msg.length){
-            click.stop()
+            sound.stop("keySound")
             clearInterval(interval);
         }
-    }, 50)    
+    }, 80)    
    
 }
 
 export const copyToClipboard = (msg : string) => {
+    let success : boolean = false;
     const element = document.createElement("textarea")
     element.value = msg
     document.body.appendChild(element)
@@ -45,9 +43,11 @@ export const copyToClipboard = (msg : string) => {
     try{
         document.execCommand('copy');
         //navigator.clipboard.writeText(msg)
+        success = true;
     }catch (err) {
             console.error('Unable to copy to clipboard', err);
+            success = false;
     }
     document.body.removeChild(element);
-    alert("skopiowano")
+    return success
 }

@@ -8,14 +8,23 @@ export const ContactMe = (app : Application) => {
         app.stage.addChild(contactContainer)
         const background : Sprite = Sprite.from("contact")
         contactContainer.addChild(background)
+        let textOffsetY = -150
         
         contactContainer.pivot.set(contactContainer.width/2,contactContainer.height/2)
         contactContainer.position.set(app.screen.width/2,app.screen.height/2)
         if(isMobile.any){
             contactContainer.scale.set(.5, .5)
+            textOffsetY = -300
         }else{
-            contactContainer.scale.set(1.5,1.5)
+            contactContainer.scale.set(.8,.8)
         }
+
+      
+        const copyText = new Text("Skopiowano do schowka", {fontFamily : "font", fontSize: "20px", fill : "white"})
+        copyText.name = "copyMessage"
+        copyText.anchor.set(.5,.5)
+        copyText.position.set(background.width/2, textOffsetY)
+        
 
         const pageTitle : Text = new Text("Kontakt", {fontFamily: "font"})
         pageTitle.position.set(background.width/2, 100)
@@ -36,7 +45,15 @@ export const ContactMe = (app : Application) => {
         copyPhoneNumber.position.set(background.width*.8, background.height*.4)
         copyPhoneNumber.eventMode = 'dynamic'
         copyPhoneNumber.on("pointerdown", () => {
-            copyToClipboard("+48531328180")
+            const copied = copyToClipboard("+48531328180")
+            if(copied == true){
+                if(!contactContainer.getChildByName("copyMessage")){
+                    contactContainer.addChild(copyText)
+                    setTimeout(() => {
+                        contactContainer.removeChild(copyText)
+                    },2000)
+                }               
+            }
         })
         copyPhoneNumber.on("mouseenter", () => {
             copyPhoneNumber.scale.set(.15, .15)
@@ -53,7 +70,15 @@ export const ContactMe = (app : Application) => {
         copyEmail.position.set(background.width*.8, background.height*.65)
         copyEmail.eventMode = 'dynamic'
         copyEmail.on("pointerdown", () => {
-            copyToClipboard("dominiklenko@gmail.com")
+            const copied = copyToClipboard("dominiklenko@gmail.com")
+            if(copied == true){
+                if(!contactContainer.getChildByName("copyMessage")){
+                    contactContainer.addChild(copyText)
+                    setTimeout(() => {
+                        contactContainer.removeChild(copyText)
+                    },2000)
+                }               
+            }
         })
         copyEmail.on("mouseenter", () => {
             copyEmail.scale.set(.15, .15)

@@ -25,7 +25,7 @@ export const Skills = (app : Application) => {
         const background : Sprite = Sprite.from('contact')
         skillsContainer.addChild(background)
 
-        const title : Text = new Text("Tech Stack", {fontSize : "40px", fontFamily : "font"})
+        const title : Text = new Text("Tech Stack", {fontSize : "35px", fontFamily : "font"})
         title.anchor.set(.5,.5)
         title.position.set(background.width/2, 100)
 
@@ -34,7 +34,7 @@ export const Skills = (app : Application) => {
         if(utils.isMobile.any){
             skillsContainer.scale.set(.5, .5)
         }else{
-            skillsContainer.scale.set(1.5,1.5)
+            skillsContainer.scale.set(.8,.8)
         }
 
         let xPosition : number = 75

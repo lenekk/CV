@@ -17,7 +17,8 @@ type colliderPosition = {
 
 export const Main = (app : Application) => {
 
-    sound.play('backgroundSound')
+    
+    sound.play("backgroundSound", {loop : true})
     
 	if(isMobile.android.phone){
 		
@@ -35,7 +36,7 @@ export const Main = (app : Application) => {
     player.scale.set(3,3);
     player.animationSpeed = .2;
     const background = Sprite.from(Assets.get('mapa'))
-    background.position.set(400,100)
+    background.position.set(0,-150)
 
     const colliderArray = Assets.get("mapData").layers[4]
     const colliderMap = []
@@ -64,7 +65,7 @@ export const Main = (app : Application) => {
         interactionMap.forEach((row, index) => {
             row.forEach((value : number, indexX : number) => {
                 if(value == 254){
-                    interactions.push(new Collider({x: indexX * 48 + 400, y: index * 48 + 100}, 96, 96))
+                    interactions.push(new Collider({x: indexX * 48 + 0, y: index * 48 - 150}, 96, 96))
                 }
             })
         })
@@ -84,7 +85,7 @@ export const Main = (app : Application) => {
         colliderMap.forEach((row, index) => {
             row.forEach((value : number, indexX : number) => {
                 if(value === 876){
-                    collisions.push(new Collider({x: indexX * 48 + 400, y: index * 48 + 100}, 48, 48));
+                    collisions.push(new Collider({x: indexX * 48 + 0, y: index * 48 + -150}, 48, 48));
                 }
             })
         });
@@ -218,6 +219,14 @@ export const Main = (app : Application) => {
 
         const gamePad = new GamePad(app);
         gamePad.add(keys)
+/*
+        if(document.fullscreenEnabled){
+            gamePad.fullScreenVersion()
+        }
+*/
+        document.body.addEventListener("fullscreenchange", () => {
+            gamePad.fullScreenVersion()
+        })
 
     }
 

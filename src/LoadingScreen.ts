@@ -52,13 +52,12 @@ export const LoadingScreen = (app : Application) => {
     loadingScreenContainer.addChild(rectange4)
 
     const loadingTicker = new Ticker;
-    let wait : boolean = false;
     let ticks = 0;
     loadingTicker.add(() => {
 
         ticks++
         
-        if(loadingProgress == 1 && wait == true){
+        if(loadingProgress == 1){
             rectange.destroy()
             rectange2.destroy()
             rectange3.destroy()
@@ -109,11 +108,8 @@ export const LoadingScreen = (app : Application) => {
             fontFamily: "font",
             fill: "white"
         }
-        setTimeout(() => {
-            wait = true;
-            playText.eventMode = 'dynamic'
-            
-        }, 3000)
+        
+        playText.eventMode = "dynamic"
 
         playText.on('pointerdown', () => {
             // full screen not supported on ios
@@ -125,6 +121,7 @@ export const LoadingScreen = (app : Application) => {
                     console.log("Full Screen mode rejected");
                 })
             }else{
+                loadingScreenContainer.destroy()
                 Main(app)
             }
         })

@@ -1,4 +1,4 @@
-import { Application, Graphics, Text, TextStyle} from "pixi.js"
+import { Application, Container, Graphics, Text, TextStyle} from "pixi.js"
 
 export type Keys = {
     w : {
@@ -21,8 +21,12 @@ export type Keys = {
 export class GamePad {
 
     app : Application
+    buttonsContainer : Container
+    toggler : boolean
     constructor(app : Application){
-        this.app = app;
+        this.app = app,
+        this.buttonsContainer = new Container()
+        this.toggler = false
     }
 
     add(keys : Keys){
@@ -114,14 +118,25 @@ export class GamePad {
             keys.d.isClicked = false;
         })
 
-        this.app.stage.addChild(btnUp)
-        this.app.stage.addChild(btnDown)
-        this.app.stage.addChild(btnLeft)
-        this.app.stage.addChild(btnRight)
-        this.app.stage.addChild(dText)
-        this.app.stage.addChild(aText)
-        this.app.stage.addChild(wText)
-        this.app.stage.addChild(sText)
+        this.buttonsContainer.addChild(btnUp)
+        this.buttonsContainer.addChild(btnDown)
+        this.buttonsContainer.addChild(btnLeft)
+        this.buttonsContainer.addChild(btnRight)
+        this.buttonsContainer.addChild(dText)
+        this.buttonsContainer.addChild(aText)
+        this.buttonsContainer.addChild(wText)
+        this.buttonsContainer.addChild(sText)
+
+        this.app.stage.addChild(this.buttonsContainer)
+    }
+
+    fullScreenVersion(){
+        if(this.toggler == false){
+            this.buttonsContainer.y += 50
+        }else{
+            this.buttonsContainer.y -= 50
+        }
+        this.toggler = !this.toggler         
     }
 
 }

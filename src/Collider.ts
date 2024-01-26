@@ -15,7 +15,7 @@ export class Collider {
 	}
 
 	add(){
-		this.rect.beginFill([0, 1, 0, 1]);
+		this.rect.beginFill([0, 1, 0, 0]);
 		this.rect.drawRect(this.position.x, this.position.y, this.width, this.height);
 		this.rect.endFill();
 		this.container.addChild(this.rect);
