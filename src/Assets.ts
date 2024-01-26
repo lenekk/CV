@@ -20,7 +20,11 @@ export const manifest:ResolverManifest = {
                 "html": "html.png",
                 "css" : "css.png",
                 "git" : "git.png",
-                "pixi" : "pixijs.png"
+                "pixi" : "pixijs.png",
+                "backgroundSound": "background.wav",
+                "keySound" : "key.wav",
+                "openSound" : "open.wav",
+                "skillSound" : "skillsPop.wav"
 
             }
         }

@@ -1,4 +1,5 @@
-import { AnimatedSprite, Application, Container, Sprite, utils, Assets, Ticker} from "pixi.js";
+import { AnimatedSprite, Application, Container, Sprite, utils, Assets, Ticker, isMobile} from "pixi.js";
+import {sound} from "@pixi/sound"
 import { Keys, GamePad } from "./GamePad";
 import { Collider } from "./Collider";
 import { AboutMe } from "./AboutMe";
@@ -15,6 +16,14 @@ type colliderPosition = {
 }
 
 export const Main = (app : Application) => {
+
+    sound.play('backgroundSound')
+    
+	if(isMobile.android.phone){
+		
+		//@ts-ignore
+		window.screen.orientation['lock']("portrait-primary");
+	}
 
     const mainContainer = new Container();
     app.stage.addChild(mainContainer);

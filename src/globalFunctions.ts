@@ -1,22 +1,38 @@
-import { Text } from "pixi.js";
+import { Assets, Text } from "pixi.js";
+import { Sound } from "@pixi/sound"
+
+
 
 export const writeMessage = (msg : string, textInstance : Text) => {
         
     let currentMessage = ""
     let i = 0;
 
+    const click = Sound.from(Assets.get("keySound"))
+    click.singleInstance = true;
+    click.speed = .2
+
     const writing =(i : number) => {
-        currentMessage = msg.substring(0, i) 
-        textInstance.text = currentMessage 
+        if(!textInstance.dirty){
+            currentMessage = msg.substring(0, i)
+            click.play()
+            textInstance.text = currentMessage 
+        }else{
+            click.stop()
+            clearInterval(interval)
+        }
+
     }
     const interval = setInterval(() => {
         i++
         writing(i)
-    }, 50)
-    
-    if(i == msg.length){
-        clearInterval(interval);
-    }
+        console.log(textInstance.dirty);
+        if(i == msg.length){
+            click.stop()
+            clearInterval(interval);
+        }
+    }, 50)    
+   
 }
 
 export const copyToClipboard = (msg : string) => {
@@ -27,11 +43,11 @@ export const copyToClipboard = (msg : string) => {
     element.select()
     element.setSelectionRange(0, 99999);
     try{
-        //document.execCommand('copy');
-        navigator.clipboard.writeText(msg)
+        document.execCommand('copy');
+        //navigator.clipboard.writeText(msg)
     }catch (err) {
             console.error('Unable to copy to clipboard', err);
     }
     document.body.removeChild(element);
-    alert("Skopiowano: " + element.value);
+    alert("skopiowano")
 }

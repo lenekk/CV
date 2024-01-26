@@ -1,4 +1,5 @@
 import { Application, Container, Sprite, Text, utils} from "pixi.js";
+import {sound} from "@pixi/sound"
 
 export const Skills = (app : Application) => {
 
@@ -7,6 +8,7 @@ export const Skills = (app : Application) => {
         
         const interval = setInterval(() => {
             where.addChild(spritesArray[i])
+            sound.play("skillSound")
             i++
             if(i == spritesArray.length){
                 clearInterval(interval);

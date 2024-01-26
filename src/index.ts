@@ -6,6 +6,9 @@ if(isMobile.any === false){
 	window.innerWidth = window.innerHeight
 }
 
+console.log(window.screen.orientation);
+
+
 const app = new Application({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
 	resolution: devicePixelRatio || 1,

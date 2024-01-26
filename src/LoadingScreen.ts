@@ -1,4 +1,4 @@
-import { Application, Assets, Container, Graphics, Ticker, Text} from "pixi.js";
+import { Application, Assets, Container, Graphics, Ticker, Text, isMobile} from "pixi.js";
 import { manifest } from "./Assets";
 import { Main } from "./Main";
 
@@ -116,8 +116,17 @@ export const LoadingScreen = (app : Application) => {
         }, 3000)
 
         playText.on('pointerdown', () => {
-            loadingScreenContainer.destroy();
-            Main(app);
+            // full screen not supported on ios
+            if(isMobile.android.phone){
+                document.body.requestFullscreen().then(() => {
+                    loadingScreenContainer.destroy();
+                    Main(app)
+                }).catch(() => {
+                    console.log("Full Screen mode rejected");
+                })
+            }else{
+                Main(app)
+            }
         })
     }
 
