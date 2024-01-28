@@ -1,10 +1,11 @@
-import { AnimatedSprite, Application, Container, Sprite, utils, Assets, Ticker, isMobile} from "pixi.js";
+import { AnimatedSprite, Application, Container, Sprite, utils, Assets, Ticker, isMobile, Text} from "pixi.js";
 import {sound} from "@pixi/sound"
 import { Keys, GamePad } from "./GamePad";
 import { Collider } from "./Collider";
 import { AboutMe } from "./AboutMe";
 import { ContactMe } from "./ContactMe";
 import { Skills } from "./Skills";
+import { writeMessage } from "./globalFunctions";
 
 type colliderPosition = {
     position : {
@@ -27,16 +28,55 @@ export const Main = (app : Application) => {
 	}
 
     const mainContainer = new Container();
+    const mainTicker = new Ticker()
     app.stage.addChild(mainContainer);
 
-    const player = new AnimatedSprite(Assets.get('mainCharacter').animations['down'])
+    const dialogBackground : Sprite = Sprite.from("tlo")
+    dialogBackground.name = "dialog"
+    dialogBackground.anchor.set(.5,.5)
+    dialogBackground.position.set(app.screen.width/2, app.screen.height/8)
+    dialogBackground.width = app.screen.width*.8
+    dialogBackground.height = app.screen.height*.2
+    const dialogText : Text = new Text("", {fontFamily : "font"})
+    dialogText.anchor.set(1,1)
+    dialogText.position.set(300, 50)
+    writeMessage("Witaj!\n\nodwiedź każdego NPC,aby\nwyświetlić informacje!", dialogText)
+
+    setTimeout(() => {
+        mainContainer.removeChild(dialogBackground)
+    }, 7000)
+
+    const player : AnimatedSprite = new AnimatedSprite(Assets.get('mainCharacter').animations['down'])
+    let playerMovSpeed : number = 1
+    console.log(mainTicker.FPS);
+    mainTicker.minFPS = 50
     const playerOffsetX = app.screen.width/2
     const playerOffsetY = app.screen.height/2 - player.height
     player.position.set(playerOffsetX, playerOffsetY);
     player.scale.set(3,3);
     player.animationSpeed = .2;
     const background = Sprite.from(Assets.get('mapa'))
-    background.position.set(0,-150)
+    const backgroundOffsetX : number = player.position.x - 325
+    const backgroundOffsetY : number = player.position.y - 500
+    const backgroundMobileOffsetX : number = player.position.x - 225
+    const backgroundMobileOffsetY : number = player.position.y - 400
+    background.position.set(backgroundOffsetX, backgroundOffsetY)
+
+
+    const npc1 : AnimatedSprite = new AnimatedSprite(Assets.get("npc1").animations['idle'])
+    npc1.animationSpeed = .1
+    npc1.scale.set(3,3)
+    npc1.play();
+
+    const bob : AnimatedSprite = new AnimatedSprite(Assets.get("bob").animations['idle'])
+    bob.animationSpeed = .1
+    bob.scale.set(3,3)
+    bob.play();
+
+    const amelia : AnimatedSprite = new AnimatedSprite(Assets.get("amelia").animations['idle'])
+    amelia.animationSpeed = .1
+    amelia.scale.set(3,3)
+    amelia.play()
 
     const colliderArray = Assets.get("mapData").layers[4]
     const colliderMap = []
@@ -57,7 +97,7 @@ export const Main = (app : Application) => {
         interactionMap.forEach((row, index) => {
             row.forEach((value : number, indexX : number) => {
                 if(value == 254){
-                    interactions.push(new Collider({x: indexX * 48/1.3365 - 98, y: index * 48/1.3365}, 96/1.3365, 96/1.3365))
+                    interactions.push(new Collider({x: indexX * 48/1.3365 + backgroundMobileOffsetX, y: index * 48/1.3365 + backgroundMobileOffsetY}, 96/1.3365, 112/1.3365))
                 }
             })
         })
@@ -65,7 +105,7 @@ export const Main = (app : Application) => {
         interactionMap.forEach((row, index) => {
             row.forEach((value : number, indexX : number) => {
                 if(value == 254){
-                    interactions.push(new Collider({x: indexX * 48 + 0, y: index * 48 - 150}, 96, 96))
+                    interactions.push(new Collider({x: indexX * 48 + backgroundOffsetX, y: index * 48 + backgroundOffsetY}, 96, 96))
                 }
             })
         })
@@ -77,7 +117,7 @@ export const Main = (app : Application) => {
         colliderMap.forEach((row, index) => {
             row.forEach((value : number, indexX : number) => {
                 if(value === 876){
-                    collisions.push(new Collider({x: indexX * 48/1.3365 - 98, y: index * 48/1.3365}, 48/1.3365, 48/1.3365));
+                    collisions.push(new Collider({x: indexX * 48/1.3365 + backgroundMobileOffsetX, y: index * 48/1.3365 + backgroundMobileOffsetY}, 48/1.3365, 48/1.3365));
                 }
             })
         });    
@@ -85,7 +125,7 @@ export const Main = (app : Application) => {
         colliderMap.forEach((row, index) => {
             row.forEach((value : number, indexX : number) => {
                 if(value === 876){
-                    collisions.push(new Collider({x: indexX * 48 + 0, y: index * 48 + -150}, 48, 48));
+                    collisions.push(new Collider({x: indexX * 48 + backgroundOffsetX, y: index * 48 + backgroundOffsetY}, 48, 48));
                 }
             })
         });
@@ -101,8 +141,18 @@ export const Main = (app : Application) => {
         app.stage.addChild(interact.add())
     })
 
+    npc1.position.set(interactions[0].position.x+22, interactions[0].position.y - 25)
+    bob.position.set(interactions[1].position.x+22, interactions[1].position.y - 25)
+    amelia.position.set(interactions[2].position.x+22, interactions[2].position.y - 25)
+    
+
     mainContainer.addChild(background);
     mainContainer.addChild(player);
+    mainContainer.addChild(npc1)
+    mainContainer.addChild(bob)
+    mainContainer.addChild(amelia)
+    mainContainer.addChild(dialogBackground)
+    dialogBackground.addChild(dialogText)
 
     const checkCollision = (col1: Sprite, col2 : colliderPosition) => {
         
@@ -118,6 +168,11 @@ export const Main = (app : Application) => {
 
     const aboutMeInteraction = (player : Sprite, interactionCollider : Collider) => {
         if(checkCollision(player, interactionCollider)){
+        
+            const toDelete = mainContainer.getChildByName("dialog")
+            if(toDelete){
+                mainContainer.removeChild(toDelete)
+            }
             AboutMe(app)
         }else{
             const childToRemove = app.stage.getChildByName("aboutMe")
@@ -129,6 +184,10 @@ export const Main = (app : Application) => {
 
     const contactInteraction = (player : Sprite, interactionCollider : Collider) => {
         if(checkCollision(player, interactionCollider)){
+            const toDelete = mainContainer.getChildByName("dialog")
+            if(toDelete){
+                mainContainer.removeChild(toDelete)
+            }
             ContactMe(app)
         }else{
             const childToRemove = app.stage.getChildByName("contact")
@@ -140,6 +199,10 @@ export const Main = (app : Application) => {
 
     const skillsInteraction = (player : Sprite, interactionCollider : Collider) => {
         if(checkCollision(player, interactionCollider)){
+            const toDelete = mainContainer.getChildByName("dialog")
+            if(toDelete){
+                mainContainer.removeChild(toDelete)
+            }
             Skills(app)
         }else{
             const childToRemove = app.stage.getChildByName("skills")
@@ -215,7 +278,7 @@ export const Main = (app : Application) => {
         window.removeEventListener('keyup', keyHandlerUp)
         
         background.scale.set(.75,.75)
-        background.position.set(-100,0)
+        background.position.set(backgroundMobileOffsetX,backgroundMobileOffsetY)
 
         const gamePad = new GamePad(app);
         gamePad.add(keys)
@@ -232,10 +295,8 @@ export const Main = (app : Application) => {
 
     let previousKey = ''
     let collisionEnter : boolean = false;
-
-    console.log(interactions);
-
-    Ticker.shared.add(() => {
+    
+    mainTicker.add(() => {
 
         collisionEnter = false
 
@@ -247,8 +308,12 @@ export const Main = (app : Application) => {
 
             for(let i=0; i<collisions.length; i++){
                 
-                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x, y: collisions[i].position.y+2}}))
+                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x, y: collisions[i].position.y+playerMovSpeed}}))
                 {
+                    collisionEnter = true;
+                    break;
+                }
+                if(checkCollision(player, {position: {x : npc1.position.x, y: npc1.position.y + playerMovSpeed}, width : npc1.width, height: npc1.height}) || checkCollision(player, {position: {x : bob.position.x, y: bob.position.y + playerMovSpeed}, width : bob.width, height: bob.height}) || checkCollision(player, {position: {x : amelia.position.x, y: amelia.position.y + playerMovSpeed}, width : amelia.width, height: amelia.height})){
                     collisionEnter = true;
                     break;
                 }
@@ -265,7 +330,10 @@ export const Main = (app : Application) => {
                     player.play();
                 }
     
-                background.position.y += 1
+                background.position.y += playerMovSpeed
+                npc1.position.y += playerMovSpeed
+                bob.position.y += playerMovSpeed
+                amelia.position.y += playerMovSpeed
                 collisions.forEach(collider => {
                     collider.move("y+")
                 })
@@ -283,8 +351,13 @@ export const Main = (app : Application) => {
 
             for(let i=0; i<collisions.length; i++){
                 
-                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x, y: collisions[i].position.y-2}}))
+                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x, y: collisions[i].position.y-playerMovSpeed}}))
                 {
+                    collisionEnter = true;
+                    break;
+                }
+
+                if(checkCollision(player, {position: {x : npc1.position.x, y: npc1.position.y - playerMovSpeed}, width : npc1.width, height: npc1.height}) || checkCollision(player, {position: {x : bob.position.x, y: bob.position.y - playerMovSpeed}, width : bob.width, height: bob.height}) || checkCollision(player, {position: {x : amelia.position.x, y: amelia.position.y - playerMovSpeed}, width : amelia.width, height: amelia.height})){
                     collisionEnter = true;
                     break;
                 }
@@ -301,7 +374,10 @@ export const Main = (app : Application) => {
                     player.play();
                 }
                 
-                background.position.y -= 1
+                background.position.y -= playerMovSpeed
+                npc1.position.y -= playerMovSpeed
+                bob.position.y -= playerMovSpeed
+                amelia.position.y -= playerMovSpeed
                 collisions.forEach(collider => {
                     collider.move("y-")
                 })
@@ -316,10 +392,15 @@ export const Main = (app : Application) => {
 
             for(let i=0; i<collisions.length; i++){
                 
-                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x+2, y: collisions[i].position.y}}))
+                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x+playerMovSpeed, y: collisions[i].position.y}}))
                 {
                     collisionEnter = true;
                     
+                    break;
+                }
+
+                if(checkCollision(player, {position: {x : npc1.position.x + playerMovSpeed, y: npc1.position.y}, width : npc1.width, height: npc1.height}) || checkCollision(player, {position: {x : bob.position.x + playerMovSpeed, y: bob.position.y}, width : bob.width, height: bob.height}) || checkCollision(player, {position: {x : amelia.position.x + playerMovSpeed, y: amelia.position.y}, width : amelia.width, height: amelia.height})){
+                    collisionEnter = true;
                     break;
                 }
                 
@@ -335,7 +416,10 @@ export const Main = (app : Application) => {
                     player.play();
                 }
     
-                background.position.x += 1
+                background.position.x += playerMovSpeed
+                bob.position.x += playerMovSpeed
+                npc1.position.x += playerMovSpeed
+                amelia.position.x += playerMovSpeed
                 collisions.forEach(collider => {
                     collider.move("x+")
                 })
@@ -352,10 +436,15 @@ export const Main = (app : Application) => {
 
             for(let i=0; i<collisions.length; i++){
                 
-                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x -2, y: collisions[i].position.y}}))
+                if(checkCollision(player, {...collisions[i], position: {x: collisions[i].position.x -playerMovSpeed, y: collisions[i].position.y}}))
                 {
                     collisionEnter = true;
                     
+                    break;
+                }
+
+                if(checkCollision(player, {position: {x : npc1.position.x - playerMovSpeed, y: npc1.position.y}, width : npc1.width, height: npc1.height}) || checkCollision(player, {position: {x : bob.position.x - playerMovSpeed, y: bob.position.y}, width : bob.width, height: bob.height}) || checkCollision(player, {position: {x : amelia.position.x - playerMovSpeed, y: amelia.position.y}, width : amelia.width, height: amelia.height})){
+                    collisionEnter = true;
                     break;
                 }
                 
@@ -371,7 +460,10 @@ export const Main = (app : Application) => {
                     player.play();
                 }
     
-                background.position.x -= 1
+                background.position.x -= playerMovSpeed
+                npc1.position.x -= playerMovSpeed
+                bob.position.x -= playerMovSpeed
+                amelia.position.x -= playerMovSpeed
                 collisions.forEach(collider => {
                     collider.move("x-")
                 })
@@ -388,6 +480,7 @@ export const Main = (app : Application) => {
         }
     })
 
+    mainTicker.start();
     console.log(previousKey);
 
     window.addEventListener('keydown', keyHandlerDown);

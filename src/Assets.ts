@@ -24,7 +24,11 @@ export const manifest:ResolverManifest = {
                 "backgroundSound": "background.wav",
                 "keySound" : "key.wav",
                 "openSound" : "open.wav",
-                "skillSound" : "skillsPop.wav"
+                "skillSound" : "skillsPop.wav",
+                "npc1" : "npc1.json",
+                "bob" : "bobIdle.json",
+                "amelia" : "ameliaIdle.json",
+                "tlo" : "tlo.png"
 
             }
         }

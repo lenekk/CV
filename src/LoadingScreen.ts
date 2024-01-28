@@ -96,10 +96,6 @@ export const LoadingScreen = (app : Application) => {
     const loadManifest = async () => {
         Assets.init({manifest : manifest});
         await Assets.load('font.ttf');
-        await Assets.loadBundle("images", progress.bind(this));
-    }
-
-    const gameLoaded = () => {
         titleText.style =  {
             fontFamily: "font",
             fill: "white"
@@ -108,6 +104,10 @@ export const LoadingScreen = (app : Application) => {
             fontFamily: "font",
             fill: "white"
         }
+        await Assets.loadBundle("images", progress.bind(this));
+    }
+
+    const gameLoaded = () => {
         
         playText.eventMode = "dynamic"
 

@@ -1,0 +1,162 @@
+{
+  "frames": {
+    "20.png": {
+      "frame": {
+        "x": 1,
+        "y": 1,
+        "w": 16,
+        "h": 23
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 9,
+        "w": 16,
+        "h": 23
+      },
+      "sourceSize": {
+        "w": 16,
+        "h": 32
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "21.png": {
+      "frame": {
+        "x": 1,
+        "y": 26,
+        "w": 16,
+        "h": 23
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 9,
+        "w": 16,
+        "h": 23
+      },
+      "sourceSize": {
+        "w": 16,
+        "h": 32
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "18.png": {
+      "frame": {
+        "x": 1,
+        "y": 51,
+        "w": 16,
+        "h": 22
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 10,
+        "w": 16,
+        "h": 22
+      },
+      "sourceSize": {
+        "w": 16,
+        "h": 32
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "22.png": {
+      "frame": {
+        "x": 1,
+        "y": 75,
+        "w": 16,
+        "h": 22
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 10,
+        "w": 16,
+        "h": 22
+      },
+      "sourceSize": {
+        "w": 16,
+        "h": 32
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "23.png": {
+      "frame": {
+        "x": 1,
+        "y": 99,
+        "w": 16,
+        "h": 22
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 10,
+        "w": 16,
+        "h": 22
+      },
+      "sourceSize": {
+        "w": 16,
+        "h": 32
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "19.png": {
+      "frame": {
+        "x": 1,
+        "y": 51,
+        "w": 16,
+        "h": 22
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 10,
+        "w": 16,
+        "h": 22
+      },
+      "sourceSize": {
+        "w": 16,
+        "h": 32
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+"animations" : {
+	"idle" : ["18.png", "19.png", "20.png", "21.png", "22.png", "23.png"]
+},
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "ameliaIdle.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 18,
+      "h": 122
+    },
+    "scale": 1
+  }
+}
