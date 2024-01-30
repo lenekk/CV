@@ -31,7 +31,7 @@ export const AboutMe = (app : Application) => {
     
         const textTitle : Text = new Text("")
         textTitle.style = titleStyle
-        textTitle.anchor.set(.5, 10)
+        textTitle.anchor.set(.4, 10)
         writeMessage("About me", textTitle);
     
         const aboutText : Text = new Text("")

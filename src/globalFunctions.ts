@@ -10,9 +10,10 @@ export const writeMessage = (msg : string, textInstance : Text) => {
 
     const writing =(i : number) => {
         if(!textInstance.dirty){
-            currentMessage = msg.substring(0, i)
-            //console.log(currentMessage);
-            sound.play("keySound", {singleInstance : true})
+            currentMessage += msg[i]
+            if(msg[i] !== " "){
+                sound.play("keySound", {singleInstance : true})
+            }
             textInstance.text = currentMessage 
         }else{
             sound.stop("keySound")
@@ -21,8 +22,9 @@ export const writeMessage = (msg : string, textInstance : Text) => {
 
     }
     const interval = setInterval(() => {
-        i++
+        
         writing(i)
+        i++
         //console.log(textInstance.dirty);
         if(i == msg.length){
             sound.stop("keySound")

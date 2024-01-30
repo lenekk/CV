@@ -1,8 +1,11 @@
 import { Application, Assets, Container, Graphics, Ticker, Text, isMobile} from "pixi.js";
 import { manifest } from "./Assets";
 import { Main } from "./Main";
+import { sound } from "@pixi/sound";
 
 export const LoadingScreen = (app : Application) => {
+
+    app.ticker.minFPS = 60
 
     const loadingScreenContainer : Container = new Container();
 
@@ -52,6 +55,7 @@ export const LoadingScreen = (app : Application) => {
     loadingScreenContainer.addChild(rectange4)
 
     const loadingTicker = new Ticker;
+    loadingTicker.maxFPS = 60
     let ticks = 0;
     loadingTicker.add(() => {
 
@@ -67,11 +71,7 @@ export const LoadingScreen = (app : Application) => {
             loadingScreenContainer.addChild(playText);
             loadingTicker.stop()
         }else{
-            //rectange.angle = 45;
-            //rectange2.angle = -45;
-            //rectange3.angle = 135;
-            //rectange4.angle = - 
-
+          
             rectange.position.x += Math.cos(ticks) * 30 ; 
             rectange.position.y += Math.cos(ticks) * 30 ;
 
@@ -115,12 +115,16 @@ export const LoadingScreen = (app : Application) => {
             // full screen not supported on ios
             if(isMobile.android.phone){
                 document.body.requestFullscreen().then(() => {
+                    sound.play("backgroundSound", {loop : true})
+                    loadingTicker.destroy();
                     loadingScreenContainer.destroy();
                     Main(app)
                 }).catch(() => {
                     console.log("Full Screen mode rejected");
                 })
             }else{
+                sound.play("backgroundSound", {loop : true})
+                loadingTicker.destroy();
                 loadingScreenContainer.destroy()
                 Main(app)
             }

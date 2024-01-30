@@ -22,22 +22,22 @@ export class Collider {
         return this.container
 	}
 
-	move(value: string): void{
+	move(value: string, speed : number): void{
 		if(value === 'y+'){
-			this.rect.position.y += 1;
-			this.position.y += 1;
+			this.rect.position.y += speed;
+			this.position.y += speed;
 		}
 		else if(value === 'y-'){
-			this.rect.position.y -= 1;
-			this.position.y -=1;
+			this.rect.position.y -= speed;
+			this.position.y -=speed;
 		}
 		else if(value === 'x-'){
-			this.rect.position.x -= 1;
-			this.position.x -=1;
+			this.rect.position.x -= speed;
+			this.position.x -=speed;
 		}
 		else if(value === 'x+'){
-			this.rect.position.x += 1;
-			this.position.x +=1;
+			this.rect.position.x += speed;
+			this.position.x +=speed;
 		};
 		
 	}

@@ -1,6 +1,6 @@
 {
   "frames": {
-    "20.png": {
+    "20amelia.png": {
       "frame": {
         "x": 1,
         "y": 1,
@@ -24,7 +24,7 @@
         "y": 0.5
       }
     },
-    "21.png": {
+    "21amelia.png": {
       "frame": {
         "x": 1,
         "y": 26,
@@ -48,7 +48,7 @@
         "y": 0.5
       }
     },
-    "18.png": {
+    "18amelia.png": {
       "frame": {
         "x": 1,
         "y": 51,
@@ -72,7 +72,7 @@
         "y": 0.5
       }
     },
-    "22.png": {
+    "22amelia.png": {
       "frame": {
         "x": 1,
         "y": 75,
@@ -96,7 +96,7 @@
         "y": 0.5
       }
     },
-    "23.png": {
+    "23amelia.png": {
       "frame": {
         "x": 1,
         "y": 99,
@@ -120,7 +120,7 @@
         "y": 0.5
       }
     },
-    "19.png": {
+    "19amelia.png": {
       "frame": {
         "x": 1,
         "y": 51,
@@ -146,7 +146,7 @@
     }
   },
 "animations" : {
-	"idle" : ["18.png", "19.png", "20.png", "21.png", "22.png", "23.png"]
+	"idle" : ["18amelia.png", "19amelia.png", "20amelia.png", "21amelia.png", "22amelia.png", "23amelia.png"]
 },
   "meta": {
     "app": "http://free-tex-packer.com",

@@ -1,5 +1,4 @@
 import { AnimatedSprite, Application, Container, Sprite, utils, Assets, Ticker, isMobile, Text} from "pixi.js";
-import {sound} from "@pixi/sound"
 import { Keys, GamePad } from "./GamePad";
 import { Collider } from "./Collider";
 import { AboutMe } from "./AboutMe";
@@ -17,10 +16,7 @@ type colliderPosition = {
 }
 
 export const Main = (app : Application) => {
-
-    
-    sound.play("backgroundSound", {loop : true})
-    
+     
 	if(isMobile.android.phone){
 		
 		//@ts-ignore
@@ -37,9 +33,9 @@ export const Main = (app : Application) => {
     dialogBackground.position.set(app.screen.width/2, app.screen.height/8)
     dialogBackground.width = app.screen.width*.8
     dialogBackground.height = app.screen.height*.2
-    const dialogText : Text = new Text("", {fontFamily : "font"})
-    dialogText.anchor.set(1,1)
-    dialogText.position.set(300, 50)
+    const dialogText : Text = new Text("", {fontFamily : "font", lineHeight : 30, fontSize : "2.5em"})
+    dialogText.anchor.set(0,0)
+    dialogText.position.set(-300, -50)
     writeMessage("Witaj!\n\nodwiedź każdego NPC,aby\nwyświetlić informacje!", dialogText)
 
     setTimeout(() => {
@@ -47,9 +43,8 @@ export const Main = (app : Application) => {
     }, 7000)
 
     const player : AnimatedSprite = new AnimatedSprite(Assets.get('mainCharacter').animations['down'])
-    let playerMovSpeed : number = 1
-    console.log(mainTicker.FPS);
-    mainTicker.minFPS = 50
+    let playerMovSpeed : number = 2
+    mainTicker.maxFPS = 60
     const playerOffsetX = app.screen.width/2
     const playerOffsetY = app.screen.height/2 - player.height
     player.position.set(playerOffsetX, playerOffsetY);
@@ -335,11 +330,11 @@ export const Main = (app : Application) => {
                 bob.position.y += playerMovSpeed
                 amelia.position.y += playerMovSpeed
                 collisions.forEach(collider => {
-                    collider.move("y+")
+                    collider.move("y+", playerMovSpeed)
                 })
 
                 interactions.forEach(interact => {
-                    interact.move("y+")
+                    interact.move("y+", playerMovSpeed)
                 })
             }
 
@@ -379,10 +374,10 @@ export const Main = (app : Application) => {
                 bob.position.y -= playerMovSpeed
                 amelia.position.y -= playerMovSpeed
                 collisions.forEach(collider => {
-                    collider.move("y-")
+                    collider.move("y-", playerMovSpeed)
                 })
                 interactions.forEach(interact => {
-                    interact.move("y-")
+                    interact.move("y-", playerMovSpeed)
                 })
             }
             
@@ -421,10 +416,10 @@ export const Main = (app : Application) => {
                 npc1.position.x += playerMovSpeed
                 amelia.position.x += playerMovSpeed
                 collisions.forEach(collider => {
-                    collider.move("x+")
+                    collider.move("x+", playerMovSpeed)
                 })
                 interactions.forEach(interact => {
-                    interact.move("x+")
+                    interact.move("x+", playerMovSpeed)
                 })
             }
 
@@ -465,10 +460,10 @@ export const Main = (app : Application) => {
                 bob.position.x -= playerMovSpeed
                 amelia.position.x -= playerMovSpeed
                 collisions.forEach(collider => {
-                    collider.move("x-")
+                    collider.move("x-", playerMovSpeed)
                 })
                 interactions.forEach(interact => {
-                    interact.move("x-")
+                    interact.move("x-", playerMovSpeed)
                 })
             }
 
